@@ -1,0 +1,5 @@
+# Ignorar la carpeta de imágenes subidas
+uploads/
+
+# ¡MUY IMPORTANTE! Ignorar el archivo con la contraseña de la BD
+config/conexion.php
