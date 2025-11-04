@@ -31,65 +31,7 @@ try {
     
     <link rel="stylesheet" href="css/estilos.css">
     
-    <style>
-        .productos-grid {
-            display: grid;
-            /* 3 columnas en desktop, 2 en tablet, 1 en móvil */
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        .producto-card {
-            background-color: var(--color-gris-carbon);
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden; 
-            text-decoration: none;
-            color: var(--color-gris-claro);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .producto-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 20px rgba(0, 255, 132, 0.15);
-            border-color: var(--color-verde-neon);
-        }
-        .producto-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover; 
-            background-color: var(--color-negro);
-        }
-        .producto-info {
-            padding: 1.5rem;
-        }
-        .producto-info h3 {
-            color: var(--color-blanco);
-            margin: 0 0 0.5rem 0;
-            font-size: 1.25rem;
-            /* Para cortar texto muy largo */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .producto-precio {
-            color: var(--color-verde-neon);
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        .btn-ver {
-            background-color: var(--color-verde-neon);
-            color: var(--color-negro);
-            padding: 0.6rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 700;
-            display: inline-block;
-        }
-        .btn-ver:hover {
-            background-color: var(--color-blanco);
-        }
-    </style>
+    
 </head>
 
 <body class="page-content">
@@ -153,6 +95,21 @@ try {
 
         </div>
     </main>
+
+    <?php
+    // --- ¡BLOQUE NUEVO PARA MOSTRAR MENSAJES! ---
+    if (isset($_SESSION['mensaje'])) {
+        $tipo_mensaje = isset($_SESSION['tipo_mensaje']) ? $_SESSION['tipo_mensaje'] : 'error';
+        // Añadimos un estilo para que se alinee con el contenido
+        echo "<div class='mensaje $tipo_mensaje' style='max-width: 1200px; margin: 1rem auto; width: 90%;'>";
+        echo htmlspecialchars($_SESSION['mensaje']);
+        echo "</div>";
+
+        // Borrar el mensaje después de mostrarlo
+        unset($_SESSION['mensaje']);
+        unset($_SESSION['tipo_mensaje']);
+    }
+    ?>
     
 </body>
 </html>

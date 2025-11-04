@@ -394,3 +394,125 @@ main {
     display: block;
     border: 1px solid var(--color-verde-neon);
 }
+
+.productos-grid {
+    display: grid;
+    /* Columnas automáticas que miden mínimo 280px */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.producto-card {
+    background-color: var(--color-gris-carbon);
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden; /* Para que la imagen no se salga */
+    text-decoration: none;
+    color: var(--color-gris-claro);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.producto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 255, 132, 0.15);
+    border-color: var(--color-verde-neon);
+}
+
+.producto-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover; /* Asegura que la imagen cubra el espacio */
+    background-color: var(--color-negro);
+}
+
+.producto-info {
+    padding: 1.5rem;
+}
+
+.producto-info h3 {
+    color: var(--color-blanco);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    /* Para cortar texto muy largo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.producto-precio {
+    color: var(--color-verde-neon);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.btn-ver {
+    background-color: var(--color-verde-neon);
+    color: var(--color-negro);
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.btn-ver:hover {
+    background-color: var(--color-blanco);
+}
+
+/* ----
+   MEJORAS DE DISEÑO PARA EL FILTRO (Paso 10.1)
+---- */
+
+.filtro-sidebar h2 {
+    /* (Simulamos un poco el efecto 'glitch' de tu imagen) */
+    text-shadow: 0 0 5px var(--color-verde-neon), 
+                 0 0 10px rgba(0, 255, 132, 0.5);
+}
+
+.filtro-grupo label {
+    font-size: 1.1rem; /* Los hacemos un poco más pequeños */
+    font-weight: 600;
+    color: var(--color-gris-claro); /* Un blanco menos intenso */
+    margin-bottom: 0.75rem;
+}
+
+/* --- ¡AQUÍ ESTÁ EL ARREGLO PRINCIPAL! --- */
+.filtro-grupo select,
+.filtro-grupo input[type="number"] {
+    width: 100%;
+    box-sizing: border-box; /* <--- ¡ESTA ES LA LÍNEA MÁGICA! */
+    color: var(--color-blanco);
+    border: 1px solid #444;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* Para el placeholder de "Mín" y "Máx" */
+.filtro-grupo input[type="number"]::placeholder {
+    color: var(--color-gris-claro);
+    opacity: 0.7;
+}
+
+.btn-limpiar {
+    display: block;
+    width: 100%;
+    box-sizing: border-box; /* <--- ¡LA MISMA LÍNEA MÁGICA! */
+    padding: 0.85rem; /* (Mismo padding que .btn-primary) */
+    background-color: transparent;
+    color: var(--color-gris-claro);
+    border: 2px solid #444;
+    transition: all 0.3s ease;
+    font-size: 1rem; /* (Mismo font-size que .btn-primary) */
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    border-radius: 4px; /* (Para que sea igual al botón verde) */
+}
+
+.btn-limpiar:hover {
+    background-color: var(--color-negro);
+    color: var(--color-blanco);
+    border-color: var(--color-gris-claro); /* El borde se ilumina */
+}

@@ -1,4 +1,12 @@
 <?php
+
+require_once 'verificar_admin.php'; // ¡GUARDIA AQUÍ!
+
+// (session_start() ya no es necesario)
+
+// Incluir la conexión
+require '../config/conexion.php';
+
 // 1. Iniciar la sesión
 session_start();
 

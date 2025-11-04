@@ -1,4 +1,13 @@
 <?php
+require_once 'verificar_admin.php'; // ¡GUARDIA AQUÍ!
+
+// (session_start() ya no es necesario aquí, el guardia lo hace)
+
+// Incluir la conexión a la BD
+require '../config/conexion.php';
+
+
+
 // Iniciar sesión (¡siempre primero!)
 session_start();
 

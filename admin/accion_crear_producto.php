@@ -1,4 +1,13 @@
 <?php
+
+require_once 'verificar_admin.php'; // ¡GUARDIA AQUÍ!
+
+// (session_start() ya no es necesario, el guardia lo hace)
+
+// 2. Incluir la conexión
+require '../config/conexion.php';
+
+
 // 1. Iniciar la sesión (para mensajes de éxito/error)
 session_start();
 
