@@ -48,7 +48,7 @@ try {
             <div class="nav-links-user">
                 <?php if (isset($_SESSION['usuario_id'])): ?>
                     <span>¡Hola, <?php echo htmlspecialchars($_SESSION['usuario_nombres']); ?>!</span>
-                    <a href="#">Mi Cuenta</a>
+                    <a href="mi_cuenta.php">Mi Cuenta</a> 
                     <a href="logout.php">Cerrar Sesión</a>
                 <?php else: ?>
                     <a href="login.php">Cuenta</a>

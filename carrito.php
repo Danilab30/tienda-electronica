@@ -199,7 +199,7 @@ try {
                     <a href="#">Mi Cuenta</a>
                     <a href="logout.php">Cerrar Sesión</a>
                 <?php else: ?>
-                    <a href="login.php">Cuenta</a>
+                    <a href="mi_cuenta.php">Mi Cuenta</a>
                 <?php endif; ?>
                 <a href="carrito.php">Carrito</a>
             </div>
