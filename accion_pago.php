@@ -25,6 +25,21 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $usuario_id = $_SESSION['usuario_id'];
 $total_pagado_form = $_POST['total_pagado']; // Este es el total que nos mandó el checkout
 
+// --- NUEVA LÓGICA DE DIRECCIÓN ---
+
+$calle = $_POST['calle'];
+$num_ext = $_POST['num_ext'];
+$num_int = isset($_POST['num_int']) ? "Int. " . $_POST['num_int'] : ""; // Solo si hay num int
+$colonia = $_POST['colonia'];
+$municipio = $_POST['municipio'];
+$estado = $_POST['estado'];
+$cp = $_POST['cp'];
+$referencias = isset($_POST['referencias']) ? "Ref: " . $_POST['referencias'] : "";
+
+
+$direccion = "$calle #$num_ext $num_int, Col. $colonia, $municipio, $estado, CP: $cp. $referencias";
+
+
 // --- 5. INICIAMOS LA TRANSACCIÓN ---
 // Una "transacción" le dice a MySQL: "Vas a hacer 4-5 cosas.
 // Si UNA SOLA falla, cancela (rollback) TODO.
@@ -62,17 +77,19 @@ try {
     }
 
     // --- PASO B: Crear el Pedido en la tabla 'pedidos' ---
-    $sql_pedido = "INSERT INTO pedidos (usuario_id, total, estado_pago, metodo_pago) 
-                   VALUES (?, ?, 'pagado', 'simulado')";
+    
+    $sql_pedido = "INSERT INTO pedidos (usuario_id, total, direccion_envio, estado_pago, metodo_pago, estatus) 
+               VALUES (?, ?, ?, 'pagado', 'simulado', 'Procesando')";
+
     $stmt_pedido = $pdo->prepare($sql_pedido);
-    $stmt_pedido->execute([$usuario_id, $total_real]);
+    $stmt_pedido->execute([$usuario_id, $total_real, $direccion]);
 
     // --- PASO C: Obtener el ID del pedido que acabamos de crear ---
     $pedido_id = $pdo->lastInsertId();
 
     // --- PASO D: Mover productos del carrito a 'detalles_pedido' y Actualizar Stock ---
     foreach ($items_carrito as $item) {
-        
+
         // 1. Insertar en 'detalles_pedido'
         $sql_detalles = "INSERT INTO detalles_pedido (pedido_id, producto_id, cantidad, precio_unitario) 
                          VALUES (?, ?, ?, ?)";
@@ -99,7 +116,6 @@ try {
     $_SESSION['ultimo_pedido_id'] = $pedido_id;
     header('Location: gracias.php');
     exit;
-
 } catch (Exception $e) {
     // --- ¡FALLO! Revertir la transacción ---
     // Si algo falló (ej. no hay stock), cancelamos todos los cambios
@@ -111,4 +127,3 @@ try {
     header('Location: carrito.php');
     exit;
 }
-?>

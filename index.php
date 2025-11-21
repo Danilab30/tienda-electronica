@@ -1,75 +1,101 @@
 <?php
-// Iniciar la sesión
-session_start();
-
-// Incluir la conexión
+// (session_start ya lo hace el header, pero requerimos la conexión y la lógica de productos)
 require 'config/conexion.php';
 
 // --- LÓGICA PARA LEER PRODUCTOS ---
-// Vamos a buscar los 3 productos más recientes
 $productos_recientes = [];
 try {
-    // Consulta SQL para traer 3 productos, ordenados del más nuevo al más viejo
     $sql = "SELECT * FROM productos WHERE stock > 0 ORDER BY id DESC LIMIT 3";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $productos_recientes = $stmt->fetchAll();
-
 } catch (PDOException $e) {
-    // Manejar error
     echo "Error al cargar productos: " . $e->getMessage();
 }
-
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Tienda de Electrónica</title>
-    
-    <link rel="stylesheet" href="css/estilos.css">
-    
-    
-</head>
-
-<body class="page-content">
-
-    <header>
-        <nav>
-            <div class="nav-links-main">
-                <a href="index.php" class="logo">MiTienda</a>
-                <a href="index.php">Inicio</a>
-                <a href="categorias.php">Categorías</a>
-                <a href="#">Ofertas</a>
-            </div>
-            
-            <div class="nav-links-user">
-                <?php if (isset($_SESSION['usuario_id'])): ?>
-                    <span>¡Hola, <?php echo htmlspecialchars($_SESSION['usuario_nombres']); ?>!</span>
-                    <a href="mi_cuenta.php">Mi Cuenta</a> 
-                    <a href="logout.php">Cerrar Sesión</a>
-                <?php else: ?>
-                    <a href="login.php">Cuenta</a>
-                <?php endif; ?>
-                
-                <a href="carrito.php">Carrito</a>
-            </div>
-        </nav>
-    </header>
+<?php include 'includes/header.php'; ?>
 
     <main>
-        <div class="hero">
-            <h1>Componentes de Alta Gama</h1>
-            <p>Arma la PC de tus sueños con la última tecnología en hardware.</p>
-            <a href="categorias.php" class="btn-comprar">Ver Todas las Categorías</a>
+        
+        <?php if (isset($_SESSION['mensaje'])): ?>
+            <?php 
+                $tipo_mensaje = isset($_SESSION['tipo_mensaje']) ? $_SESSION['tipo_mensaje'] : 'error';
+                echo "<div class='mensaje $tipo_mensaje' style='max-width: 1200px; margin: 1rem auto; width: 90%;'>";
+                echo htmlspecialchars($_SESSION['mensaje']);
+                echo "</div>";
+                unset($_SESSION['mensaje']);
+                unset($_SESSION['tipo_mensaje']);
+            ?>
+        <?php endif; ?>
+
+        <div class="slider-container">
+            <div class="slider-wrapper" id="slider">
+                
+                <div class="slide">
+                    <a href="categorias.php?categoria=Computadoras"> <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80" alt="Setup Gamer">
+                        <div class="slide-content">
+                            <h2>Componentes High-End</h2>
+                            <p>La mejor potencia para tu PC Gamer</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <a href="categorias.php?categoria=Procesadores"> <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80" alt="Procesadores">
+                        <div class="slide-content">
+                            <h2>Nueva Generación</h2>
+                            <p>Procesadores y Tarjetas de Video</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <a href="categorias.php?categoria=Perifericos"> <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80" alt="Periféricos">
+                        <div class="slide-content">
+                            <h2>Periféricos Pro</h2>
+                            <p>Teclados, Mouse y Audio de alta fidelidad</p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+            
+            <button class="slider-btn prev-btn" onclick="moverSlide(-1)">&#10094;</button>
+            <button class="slider-btn next-btn" onclick="moverSlide(1)">&#10095;</button>
         </div>
+            
+            <button class="slider-btn prev-btn" onclick="moverSlide(-1)">&#10094;</button>
+            <button class="slider-btn next-btn" onclick="moverSlide(1)">&#10095;</button>
+        </div>
+
+        <script>
+            let indiceActual = 0;
+            const slider = document.getElementById('slider');
+            const totalSlides = 3; // Número de slides que pusimos
+
+            function moverSlide(direccion) {
+                indiceActual += direccion;
+                
+                if (indiceActual >= totalSlides) {
+                    indiceActual = 0;
+                } else if (indiceActual < 0) {
+                    indiceActual = totalSlides - 1;
+                }
+
+                // Movemos el wrapper usando CSS transform
+                slider.style.transform = `translateX(-${indiceActual * 100}%)`;
+            }
+
+            // Hacer que se mueva solo cada 5 segundos
+            setInterval(() => {
+                moverSlide(1);
+            }, 5000);
+        </script>
 
         <h2>Productos Recientes</h2>
 
         <div class="productos-grid">
-            
             <?php if (empty($productos_recientes)): ?>
                 <p>No hay productos disponibles por el momento.</p>
             <?php else: ?>
@@ -77,6 +103,10 @@ try {
                     
                     <a href="producto.php?id=<?php echo $producto['id']; ?>" class="producto-card">
                         
+                        <?php if (isset($producto['en_oferta']) && $producto['en_oferta'] == 1): ?>
+                            <div class="badge-oferta" style="position: absolute; top: 10px; right: 10px; background-color: #ff0055; color: white; padding: 0.5rem 1rem; font-weight: bold; border-radius: 4px; box-shadow: 0 0 10px rgba(255, 0, 85, 0.5); z-index: 10;">OFERTA</div>
+                            <?php endif; ?>
+
                         <?php if (!empty($producto['imagen_url'])): ?>
                             <img src="uploads/<?php echo htmlspecialchars($producto['imagen_url']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                         <?php else: ?>
@@ -92,24 +122,7 @@ try {
 
                 <?php endforeach; ?>
             <?php endif; ?>
-
         </div>
     </main>
 
-    <?php
-    // --- ¡BLOQUE NUEVO PARA MOSTRAR MENSAJES! ---
-    if (isset($_SESSION['mensaje'])) {
-        $tipo_mensaje = isset($_SESSION['tipo_mensaje']) ? $_SESSION['tipo_mensaje'] : 'error';
-        // Añadimos un estilo para que se alinee con el contenido
-        echo "<div class='mensaje $tipo_mensaje' style='max-width: 1200px; margin: 1rem auto; width: 90%;'>";
-        echo htmlspecialchars($_SESSION['mensaje']);
-        echo "</div>";
-
-        // Borrar el mensaje después de mostrarlo
-        unset($_SESSION['mensaje']);
-        unset($_SESSION['tipo_mensaje']);
-    }
-    ?>
-    
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>

@@ -1,43 +1,47 @@
 <?php
-// Iniciar la sesión para poder manejar mensajes
 session_start();
+require 'config/conexion.php';
+
+// Si ya estás logueado, te manda al inicio
+if (isset($_SESSION['usuario_id'])) {
+    header('Location: index.php');
+    exit;
+}
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Tienda de Electrónica</title>
-    
-    <link rel="stylesheet" href="css/estilos.css">
-    
-</head>
-<body class="centrado"> <div class="container">
-        <h1>Iniciar Sesión</h1>
+<?php include 'includes/header.php'; ?>
 
-        <?php
-        // Mostrar mensajes de error o éxito si existen (como el de "Registro exitoso")
-        if (isset($_SESSION['mensaje'])) {
-            // Se usa htmlspecialchars para más seguridad al mostrar mensajes
-            $tipo_mensaje = isset($_SESSION['tipo_mensaje']) ? $_SESSION['tipo_mensaje'] : 'error';
-            echo "<div class='mensaje $tipo_mensaje'>" . htmlspecialchars($_SESSION['mensaje']) . "</div>";
-            
-            // Borrar el mensaje después de mostrarlo
-            unset($_SESSION['mensaje']);
-            unset($_SESSION['tipo_mensaje']);
-        }
-        ?>
+    <main class="main-centered">
+        <?php if (isset($_SESSION['mensaje'])): ?>
+            <?php 
+                $tipo_mensaje = isset($_SESSION['tipo_mensaje']) ? $_SESSION['tipo_mensaje'] : 'error';
+                echo "<div class='mensaje $tipo_mensaje' style='max-width: 500px; margin: 1rem auto;'>" . htmlspecialchars($_SESSION['mensaje']) . "</div>";
+                unset($_SESSION['mensaje']);
+                unset($_SESSION['tipo_mensaje']);
+            ?>
+        <?php endif; ?>
 
-        <form action="accion_login.php" method="POST">
-            <div class="form-group">
-                <label for="email">Correo electrónico</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required>
-            </div>
+        <div class="container">
+            <h1>Iniciar Sesión</h1>
             
-            <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-            <a href="registro.php" class="btn btn-
+            <form action="accion_login.php" method="POST">
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required placeholder="********">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <p style="color: var(--color-gris-claro); margin-bottom: 0.5rem;">¿Aún no tienes cuenta?</p>
+                    <a href="registro.php" style="color: var(--color-verde-neon); font-weight: bold; text-decoration: none; border-bottom: 1px solid var(--color-verde-neon);">¡Regístrate gratis aquí!</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+<?php include 'includes/footer.php'; ?>

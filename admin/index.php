@@ -1,41 +1,24 @@
 <?php
-require_once 'verificar_admin.php'; // ¡GUARDIA AQUÍ!
+require_once 'verificar_admin.php'; // ¡GUARDIA DE SEGURIDAD!
 
-// (session_start() ya no es necesario aquí, el guardia lo hace)
-
-// Incluir la conexión a la BD
-require '../config/conexion.php';
-
-
-
-// Iniciar sesión (¡siempre primero!)
-session_start();
+// (El guardia ya inicia la sesión, no hace falta poner session_start de nuevo)
 
 // Incluir la conexión a la BD
 require '../config/conexion.php';
 
 // --- INICIO DEL READ (R) ---
-// Variable para guardar los productos
 $productos = [];
 try {
-    // 1. Preparar la consulta SQL para LEER todos los productos
-    $sql = "SELECT * FROM productos ORDER BY id DESC"; // 'ORDER BY' los muestra del más nuevo al más viejo
+    $sql = "SELECT * FROM productos ORDER BY id DESC";
     $stmt = $pdo->prepare($sql);
-    
-    // 2. Ejecutar la consulta
     $stmt->execute();
-    
-    // 3. Obtener todos los resultados
-    $productos = $stmt->fetchAll(); // fetchAll() nos da un array con todos los productos
+    $productos = $stmt->fetchAll();
 
 } catch (PDOException $e) {
-    // Manejar el error si la consulta falla
     $_SESSION['mensaje'] = "Error al cargar los productos: " . $e->getMessage();
     $_SESSION['tipo_mensaje'] = 'error';
-    // (No usamos 'exit' para que la página pueda cargar de todos modos)
 }
 // --- FIN DEL READ (R) ---
-
 ?>
 
 <!DOCTYPE html>
@@ -44,9 +27,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administrador</title>
-    
     <link rel="stylesheet" href="../css/estilos.css">
-
 </head>
 
 <body class="page-content">
@@ -54,13 +35,18 @@ try {
     <div class="container admin-container" style="max-width: 1200px;">
         <h1>Panel de Administrador</h1>
 
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center;">
+            <a href="index.php" class="btn btn-primary" style="width: auto; background-color: #333; border: 1px solid #555;">📦 Inventario</a>
+            
+            <a href="pedidos.php" class="btn btn-primary" style="width: auto; background-color: #00FF84; color: #000;">💰 Ver Ventas</a>
+            
+            <a href="../index.php" class="btn btn-secondary" style="width: auto;">🏠 Ir a la Tienda</a>
+        </div>
+
         <?php
-        // Mostrar mensajes de error o éxito
         if (isset($_SESSION['mensaje'])) {
             $tipo_mensaje = isset($_SESSION['tipo_mensaje']) ? $_SESSION['tipo_mensaje'] : 'error';
             echo "<div class='mensaje $tipo_mensaje'>" . htmlspecialchars($_SESSION['mensaje']) . "</div>";
-            
-            // Borrar el mensaje después de mostrarlo
             unset($_SESSION['mensaje']);
             unset($_SESSION['tipo_mensaje']);
         }
@@ -116,6 +102,11 @@ try {
                     <input type="file" id="imagen" name="imagen" accept="image/jpeg, image/png, image/webp">
                 </div>
 
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444;">
+                    <input type="checkbox" id="en_oferta" name="en_oferta" value="1" style="width: 20px; height: 20px; accent-color: #00FF84;">
+                    <label for="en_oferta" style="margin: 0; color: #fff; cursor: pointer; font-weight: bold;">¡Marcar este producto como OFERTA!</label>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="background-color: #ffc107; color: #333;">Guardar Producto</button>
             </form>
         </div>
@@ -133,13 +124,13 @@ try {
                             <th>Stock</th>
                             <th>Categoría</th>
                             <th>Marca</th>
-                            <th>Acciones</th>
+                            <th>Oferta</th> <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($productos)): ?>
                             <tr>
-                                <td colspan="8">No hay productos registrados todavía.</td>
+                                <td colspan="9">No hay productos registrados todavía.</td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($productos as $producto): ?>
@@ -157,6 +148,15 @@ try {
                                     <td><?php echo htmlspecialchars($producto['stock']); ?></td>
                                     <td><?php echo htmlspecialchars($producto['categoria']); ?></td>
                                     <td><?php echo htmlspecialchars($producto['marca']); ?></td>
+                                    
+                                    <td>
+                                        <?php if (isset($producto['en_oferta']) && $producto['en_oferta'] == 1): ?>
+                                            <span style="background: #ff0055; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">SÍ</span>
+                                        <?php else: ?>
+                                            <span style="color: #777;">No</span>
+                                        <?php endif; ?>
+                                    </td>
+
                                     <td class="acciones">
                                         <a href="editar_producto.php?id=<?php echo $producto['id']; ?>" class="btn btn-editar">Editar</a>
                                         <a href="accion_borrar_producto.php?id=<?php echo $producto['id']; ?>" class="btn btn-borrar" onclick="return confirm('¿Estás seguro de que quieres borrar este producto?');">Borrar</a>

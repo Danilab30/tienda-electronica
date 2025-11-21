@@ -516,3 +516,717 @@ main {
     color: var(--color-blanco);
     border-color: var(--color-gris-claro); /* El borde se ilumina */
 }
+
+.categorias-container {
+    display: grid;
+    grid-template-columns: 250px 1fr; /* Sidebar | Grid */
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    width: 90%;
+}
+
+.productos-grid-container {
+    width: 100%;
+}
+
+.productos-grid-container h2 {
+    text-align: left;
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+}
+
+/* Responsive Categorías */
+@media (max-width: 900px) {
+    .categorias-container {
+        grid-template-columns: 1fr; 
+    }
+    /* (El estilo del sidebar ya lo manejamos en el bloque de filtros anterior) */
+}
+
+
+.ofertas-header {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(to bottom, var(--color-gris-carbon), var(--color-negro));
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-verde-neon);
+}
+
+.ofertas-header h1 {
+    font-size: 3rem;
+    color: var(--color-verde-neon);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(0, 255, 132, 0.5);
+}
+
+.ofertas-header p {
+    color: var(--color-gris-claro);
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+.container-ofertas {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 90%;
+    padding-bottom: 4rem;
+}
+
+.badge-oferta {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff0055;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+    z-index: 10;
+}
+
+.producto-card {
+    position: relative; /* Necesario para posicionar el badge */
+}
+
+
+/* Forzamos color oscuro en los desplegables y cajas de texto */
+.filtro-grupo select,
+.filtro-grupo input[type="number"] {
+    background-color: var(--color-negro) !important; /* Fondo negro */
+    color: var(--color-blanco) !important;           /* Texto blanco */
+    border: 1px solid #444 !important;               /* Borde gris sutil */
+    border-radius: 4px;
+    padding: 0.75rem;
+    width: 100%;
+    box-sizing: border-box; /* Para que no se salgan del cuadro */
+    font-family: var(--font-principal);
+}
+
+/* Quitamos el estilo feo cuando le das clic (focus) */
+.filtro-grupo select:focus,
+.filtro-grupo input:focus {
+    outline: none;
+    border-color: var(--color-verde-neon) !important;
+    box-shadow: 0 0 5px rgba(0, 255, 132, 0.3);
+}
+
+/* Arreglo para los inputs de precio (Mín/Máx) para que se vean alineados */
+.filtro-grupo-precio input {
+    background-color: var(--color-negro) !important;
+    color: white !important;
+}
+
+
+/* --- 2. ARREGLO DE LA BARRA DE BÚSQUEDA (HEADER) --- */
+
+/* Contenedor del buscador en el menú */
+.nav-search {
+    display: flex;
+    align-items: center;
+    margin: 0 2rem; /* Separación de los enlaces */
+    flex-grow: 1;   /* Que ocupe el espacio disponible */
+    max-width: 400px; /* Que no sea gigante */
+}
+
+/* El input donde escribes */
+.nav-search input[type="search"] {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 20px; /* Bordes redondos tipo "pastilla" */
+    border: 1px solid #444;
+    background-color: #111; /* Un poco más oscuro que el header */
+    color: var(--color-blanco);
+    font-family: var(--font-principal);
+    transition: all 0.3s ease;
+}
+
+/* Efecto cuando le das clic para buscar */
+.nav-search input[type="search"]:focus {
+    outline: none;
+    border-color: var(--color-verde-neon);
+    background-color: var(--color-negro);
+    box-shadow: 0 0 8px rgba(0, 255, 132, 0.2);
+}
+
+/* Color del texto placeholder (el que dice "Buscar producto...") */
+.nav-search input::placeholder {
+    color: #666;
+}
+
+/* --- PRODUCTO (Detalle y Reseñas) --- */
+.producto-detalle-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin-top: 2rem;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.producto-imagen img {
+    width: 100%;
+    border-radius: 8px;
+    background-color: var(--color-gris-carbon);
+    border: 1px solid #333;
+}
+.producto-info h1 {
+    color: var(--color-blanco);
+    text-align: left;
+    margin: 0 0 1rem 0;
+    font-size: 2.5rem;
+    border: none;
+}
+.producto-info .precio {
+    color: var(--color-verde-neon);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+.producto-info .descripcion {
+    color: var(--color-gris-claro);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+.carrito-form {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+.form-group-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.form-group-cantidad label {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+.form-group-cantidad input {
+    width: 60px;
+    padding: 0.75rem;
+    text-align: center;
+    background-color: var(--color-negro);
+    color: var(--color-blanco);
+    border: 1px solid #444;
+    border-radius: 4px;
+}
+.btn-agregar {
+    background-color: var(--color-verde-neon);
+    color: var(--color-negro);
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+.btn-agregar:hover {
+    background-color: var(--color-blanco);
+}
+
+/* Reseñas */
+.seccion-reseñas {
+    max-width: 1100px;
+    margin: 4rem auto;
+    padding-top: 2rem;
+    border-top: 1px solid #333;
+    width: 90%;
+}
+.seccion-reseñas h2 {
+    color: var(--color-verde-neon);
+    text-align: left;
+    border: none;
+}
+.valoracion-promedio { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+.estrellas-promedio { color: #ffc107; font-size: 1.5rem; }
+.conteo-reseñas { color: var(--color-gris-claro); font-size: 1rem; }
+.form-reseña {
+    background-color: var(--color-gris-carbon);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    margin-bottom: 2rem;
+}
+.form-reseña textarea { min-height: 100px; resize: vertical; }
+.lista-reseñas .reseña {
+    background-color: var(--color-gris-carbon);
+    border: 1px solid #333;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+.reseña-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.reseña-header strong { color: var(--color-blanco); font-size: 1.1rem; }
+.reseña-header .estrellas { color: #ffc107; }
+.reseña p { color: var(--color-gris-claro); margin: 0; }
+.reseña-login {
+    background-color: var(--color-gris-carbon);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px dashed var(--color-verde-neon);
+}
+.reseña-login a { color: var(--color-verde-neon); font-weight: 700; }
+
+/* --- CARRITO --- */
+.carrito-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+.carrito-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--color-verde-neon);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+.carrito-header h1 {
+    color: var(--color-blanco);
+    text-align: left;
+    margin: 0;
+    border: none;
+}
+.carrito-item {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px 120px 50px;
+    gap: 1.5rem;
+    align-items: center;
+    background-color: var(--color-gris-carbon);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #333;
+}
+.carrito-item-img img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    background: var(--color-negro);
+}
+.carrito-item-info h3 { margin: 0; color: var(--color-blanco); font-size: 1.2rem; }
+.carrito-item-info .stock { font-size: 0.9rem; color: var(--color-gris-claro); }
+.carrito-item-precio { font-size: 1.2rem; font-weight: 700; }
+.carrito-item-cantidad input { width: 60px; text-align: center; padding: 0.5rem; background: var(--color-negro); color: white; border: 1px solid #444; border-radius: 4px; }
+.carrito-item-quitar a { color: #dc3545; text-decoration: none; font-weight: 700; }
+.carrito-resumen {
+    background-color: var(--color-gris-carbon);
+    border: 1px solid var(--color-verde-neon);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+    width: 300px;
+    margin-left: auto;
+    box-sizing: border-box;
+}
+.resumen-linea { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 1.1rem; }
+.resumen-linea.total { font-size: 1.5rem; font-weight: 700; color: var(--color-verde-neon); border-top: 1px solid #333; padding-top: 1rem; margin-top: 1rem; }
+.btn-pagar { width: 100%; }
+
+/* --- CHECKOUT --- */
+.checkout-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 2rem auto;
+    width: 90%;
+}
+.checkout-form {
+    background-color: var(--color-gris-carbon);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+.checkout-form h2, .checkout-resumen h2 { text-align: left; margin-top: 0; border: none; }
+.checkout-form h2 { color: var(--color-blanco); }
+.checkout-resumen h2 { color: var(--color-verde-neon); }
+.checkout-form p { color: var(--color-gris-claro); line-height: 1.6; }
+.btn-simular-pago { width: 100%; }
+.resumen-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333;
+}
+.resumen-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+.resumen-item-info { flex: 1; }
+.resumen-item-info h3 { margin: 0; font-size: 1rem; color: var(--color-blanco); }
+.resumen-item-info span { font-size: 0.9rem; color: var(--color-gris-claro); }
+.resumen-item-precio { font-weight: 700; }
+
+/* --- MI CUENTA / PEDIDOS --- */
+.cuenta-container { max-width: 1000px; margin: 2rem auto; width: 90%; }
+.cuenta-header { border-bottom: 1px solid var(--color-verde-neon); margin-bottom: 2rem; padding-bottom: 1rem; }
+.cuenta-header h1 { text-align: left; color: var(--color-blanco); margin: 0; border: none; }
+.tabla-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-gris-carbon);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.tabla-pedidos th, .tabla-pedidos td { padding: 1rem; text-align: left; border-bottom: 1px solid #333; }
+.tabla-pedidos th { background-color: #111; color: var(--color-verde-neon); font-weight: 700; }
+.tabla-pedidos tr:hover { background-color: #2a2a2a; }
+.estado-pagado { color: var(--color-verde-neon); font-weight: bold; border: 1px solid var(--color-verde-neon); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9rem; }
+.btn-ver-pedido {
+    background-color: transparent;
+    border: 1px solid var(--color-gris-claro);
+    color: var(--color-gris-claro);
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+.btn-ver-pedido:hover { border-color: var(--color-verde-neon); color: var(--color-verde-neon); }
+
+/* --- DETALLE PEDIDO / GRACIAS --- */
+.detalle-container, .gracias-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: var(--color-gris-carbon);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    width: 90%;
+    box-sizing: border-box;
+}
+.detalle-header {
+    border-bottom: 1px solid var(--color-verde-neon);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.detalle-header h1, .gracias-container h1 { margin: 0; font-size: 1.8rem; color: var(--color-blanco); border: none; }
+.gracias-container h1 { color: var(--color-verde-neon); font-size: 2.5rem; margin-bottom: 1rem; text-align: center; }
+.item-pedido { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #333; align-items: center; }
+.item-pedido img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #444; }
+.item-info { flex: 1; }
+.item-info h3 { margin: 0 0 0.3rem 0; font-size: 1.1rem; color: var(--color-blanco); }
+.item-total { font-weight: 700; font-size: 1.1rem; color: var(--color-verde-neon); }
+.resumen-total { margin-top: 2rem; text-align: right; font-size: 1.5rem; font-weight: 800; color: var(--color-blanco); }
+.resumen-total span { color: var(--color-verde-neon); }
+.btn-volver { display: inline-block; margin-top: 2rem; text-decoration: none; color: var(--color-gris-claro); border: 1px solid var(--color-gris-claro); padding: 0.5rem 1rem; border-radius: 4px; transition: all 0.3s ease; }
+.btn-volver:hover { border-color: var(--color-verde-neon); color: var(--color-verde-neon); }
+.gracias-container { text-align: center; border: 1px solid var(--color-verde-neon); box-shadow: 0 4px 20px rgba(0, 255, 132, 0.1); }
+.numero-pedido { font-size: 1.5rem; font-weight: 700; color: var(--color-blanco); background-color: var(--color-negro); padding: 0.5rem 1rem; border-radius: 4px; display: inline-block; margin: 1.5rem 0; }
+
+/* Responsive Genérico */
+@media (max-width: 768px) {
+    .producto-detalle-container, .checkout-container, .carrito-item { grid-template-columns: 1fr; }
+    .checkout-resumen { grid-row: 1; }
+    .carrito-item-img { grid-row: 1 / span 4; }
+    .carrito-item-info, .carrito-item-precio, .carrito-item-cantidad, .carrito-item-quitar { grid-column: 2 / 3; text-align: left; }
+    .carrito-resumen { width: 100%; margin-left: 0; }
+}
+
+/* --- SLIDER / BANNER MÓVIL --- */
+.slider-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 255, 132, 0.1);
+}
+
+.slider-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7); /* Oscurecer un poco para que se lea el texto */
+}
+
+.slide-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    width: 80%;
+}
+
+.slide-content h2 {
+    font-size: 3rem;
+    color: var(--color-verde-neon);
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    margin-bottom: 1rem;
+}
+
+.slide-content p {
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+/* Botones del slider */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: var(--color-verde-neon);
+    border: none;
+    font-size: 2rem;
+    padding: 1rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s;
+}
+.slider-btn:hover { background: rgba(0,0,0,0.8); }
+.prev-btn { left: 0; }
+.next-btn { right: 0; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .slider-container { height: 250px; }
+    .slide-content h2 { font-size: 1.8rem; }
+    .slide-content p { font-size: 1rem; }
+}
+
+/* El contenedor del enlace */
+.logo-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente el icono y el texto */
+    gap: 12px;           /* Espacio entre el escudo y el nombre */
+    text-decoration: none;
+    margin-right: 2rem;  /* Separación de los enlaces de navegación */
+}
+
+/* El Escudo */
+.brand-icon {
+    height: 45px; /* Altura del escudo */
+    width: auto;  /* Mantiene la proporción */
+}
+
+/* El Nombre (Texto) */
+.brand-text {
+    height: 35px; /* El texto un poco más chico que el escudo se ve bien */
+    width: auto;
+    display: block; /* Asegura que se comporte bien */
+}
+
+/* AJUSTE RESPONSIVO PARA MÓVILES */
+@media (max-width: 768px) {
+    /* En pantallas pequeñas, quizás solo queremos el escudo para ahorrar espacio */
+    .brand-text {
+        display: none; /* Ocultamos el texto en celular */
+    }
+    .logo-container {
+        margin-right: 1rem;
+    }
+}
+
+
+/* El contenedor principal del formulario (la tarjeta) */
+.container form {
+    background-color: #1a1a1a !important; /* Fondo oscuro */
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #333;
+    box-shadow: 0 0 20px rgba(0, 255, 132, 0.1); /* Sombra neón sutil */
+    max-width: 500px; /* Que no se haga eterno de ancho */
+    margin: 2rem auto; /* Centrado */
+}
+
+/* Títulos dentro del form */
+.container h1 {
+    color: var(--color-verde-neon) !important;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Las etiquetas (Correo, Nombre...) */
+.form-group label {
+    color: var(--color-gris-claro) !important;
+    font-weight: normal;
+}
+
+/* Los campos donde escribes (inputs) */
+.form-group input {
+    background-color: #0a0a0a !important; /* Casi negro */
+    border: 1px solid #444 !important;
+    color: #fff !important; /* Texto blanco */
+    border-radius: 6px;
+    padding: 0.8rem;
+}
+
+/* Cuando le das clic a un input */
+.form-group input:focus {
+    border-color: var(--color-verde-neon) !important;
+    box-shadow: 0 0 8px rgba(0, 255, 132, 0.3);
+    outline: none;
+}
+
+/* Botón Principal (Registrarse/Login) */
+.btn-primary {
+    background-color: var(--color-verde-neon) !important;
+    color: #000 !important; /* Texto negro para contraste */
+    font-weight: 800;
+    text-transform: uppercase;
+    border: none;
+    padding: 1rem;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+.btn-primary:hover {
+    background-color: #fff !important;
+    box-shadow: 0 0 15px var(--color-verde-neon);
+}
+
+/* Botón Secundario (El gris de abajo) */
+/* Lo vamos a convertir en un botón oscuro con borde */
+form .btn[style*="background-color: #e2e6ea"] { 
+    background-color: transparent !important;
+    border: 2px solid #444 !important;
+    color: #fff !important;
+    margin-top: 1rem;
+}
+form .btn[style*="background-color: #e2e6ea"]:hover {
+    border-color: var(--color-verde-neon) !important;
+    color: var(--color-verde-neon) !important;
+}
+
+.main-centered {
+    flex-grow: 1;          /* Ocupa todo el espacio sobrante entre header y footer */
+    display: flex;         /* Activa modo flexible */
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente */
+    align-items: center;     /* Centra horizontalmente */
+    width: 100%;
+    min-height: 60vh;      /* Altura mínima para asegurar que se vea centrado */
+}
+
+
+/* 1. Hacemos el Logo y Texto MÁS GRANDES */
+.brand-icon-big {
+    height: 55px; /* Antes era 45px */
+    width: auto;
+}
+.brand-text-big {
+    height: 40px; /* Antes era 35px */
+    width: auto;
+    display: block;
+}
+
+/* 2. Mejoramos los Enlaces de Navegación (Inicio, Categorías...) */
+.nav-links-main a {
+    font-size: 1.1rem; /* Letra más grande */
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0 15px;
+    position: relative;
+    color: var(--color-gris-claro);
+    transition: color 0.3s;
+}
+.nav-links-main a:hover {
+    color: var(--color-verde-neon);
+}
+
+/* 3. Ajustes del Buscador */
+.nav-search {
+    display: flex;
+    align-items: center;
+    margin: 0 3rem;     /* Aumentamos el margen lateral para que respire */
+    flex-grow: 1;       /* Le decimos: "Ocupa todo el espacio que sobre" */
+    max-width: 1000px;   /* <--- AQUÍ ESTÁ EL CAMBIO (Antes era 400px) */
+}
+.nav-search button {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+}
+
+/* 4. SECCIÓN DE ICONOS (Derecha) */
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-link {
+    color: var(--color-blanco);
+    text-decoration: none;
+    font-size: 1.2rem; /* Iconos grandes */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+}
+.icon-link:hover {
+    color: var(--color-verde-neon);
+}
+.icon-link span {
+    font-size: 0.9rem; /* El texto "Hola" un poco más chico que el icono */
+    font-weight: 600;
+}
+
+/* Link de Salir chiquito */
+.logout-link {
+    color: #dc3545;
+    margin-left: 10px;
+    font-size: 1rem;
+}
+
+/* 5. EL BADGE DEL CARRITO (La bolita roja/verde) */
+.cart-container {
+    position: relative;
+}
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: var(--color-verde-neon);
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 800;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #000; /* Para que se separe del icono */
+}
+
+/* Ajuste responsivo para que no se rompa en cel */
+@media (max-width: 900px) {
+    .brand-text-big { display: none; } /* Ocultamos texto en tablet */
+    .nav-links-main a { font-size: 0.9rem; margin: 0 5px; }
+    .icon-link span { display: none; } /* Ocultamos "Hola Daniel" en móvil, dejamos solo icono */
+}

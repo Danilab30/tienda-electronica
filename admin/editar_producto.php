@@ -1,21 +1,15 @@
 <?php
-
 require_once 'verificar_admin.php'; // ¡GUARDIA AQUÍ!
 
-// Incluir la conexión
-require '../config/conexion.php';
+// (El guardia ya inicia la sesión)
 
-// Iniciar sesión
-session_start();
-
-// Incluir la conexión
+// Incluir la conexión a la BD
 require '../config/conexion.php';
 
 // --- INICIO DE LÓGICA DE EDICIÓN ---
 
 // 1. Verificar si nos han pasado un ID por la URL (método GET)
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    // Si no hay ID, no podemos editar. Redirigir al panel.
     $_SESSION['mensaje'] = "Error: No se proporcionó un ID de producto.";
     $_SESSION['tipo_mensaje'] = 'error';
     header('Location: index.php');
@@ -46,9 +40,7 @@ try {
     header('Location: index.php');
     exit;
 }
-
 // --- FIN DE LÓGICA DE EDICIÓN ---
-// Si llegamos aquí, la variable $producto tiene los datos
 ?>
 
 <!DOCTYPE html>
@@ -57,33 +49,28 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Producto: <?php echo htmlspecialchars($producto['nombre']); ?></title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 2rem; }
-        .container { max-width: 1000px; margin: auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        h1, h2 { text-align: center; color: #333; }
-        .form-container { border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.25rem; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .form-group textarea { min-height: 100px; resize: vertical; }
-        .btn { display: inline-block; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; background-color: #333; color: #fff; font-size: 1rem; text-decoration: none; }
-        .btn-cancelar { background-color: #6c757d; margin-left: 0.5rem; }
-        .imagen-actual { font-weight: bold; }
-        .imagen-actual img { max-width: 100px; height: auto; border-radius: 4px; margin-top: 0.5rem; display: block; }
-    </style>
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
-<body>
 
-    <div class="container">
+<body class="page-content">
+
+    <div class="container admin-container">
         <h1>Editar Producto</h1>
+
+        <?php
+        if (isset($_SESSION['mensaje'])) {
+            $tipo_mensaje = isset($_SESSION['tipo_mensaje']) ? $_SESSION['tipo_mensaje'] : 'error';
+            echo "<div class='mensaje $tipo_mensaje'>" . htmlspecialchars($_SESSION['mensaje']) . "</div>";
+            unset($_SESSION['mensaje']);
+            unset($_SESSION['tipo_mensaje']);
+        }
+        ?>
 
         <div class="form-container">
             <form action="accion_editar_producto.php" method="POST" enctype="multipart/form-data">
                 
                 <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
                 <input type="hidden" name="imagen_anterior" value="<?php echo htmlspecialchars($producto['imagen_url']); ?>">
-
 
                 <div class="form-group">
                     <label for="nombre">Nombre del Producto</label>
@@ -138,8 +125,15 @@ try {
                     <?php endif; ?>
                 </div>
 
-                <button type="submit" class="btn">Actualizar Producto</button>
-                <a href="index.php" class="btn btn-cancelar">Cancelar</a>
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444; margin-top: 1rem;">
+                    <input type="checkbox" id="en_oferta" name="en_oferta" value="1" style="width: 20px; height: 20px; accent-color: #00FF84;"
+                        <?php echo (isset($producto['en_oferta']) && $producto['en_oferta'] == 1) ? 'checked' : ''; ?>>
+                    
+                    <label for="en_oferta" style="margin: 0; color: #fff; cursor: pointer; font-weight: bold;">¡Marcar este producto como OFERTA!</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="background-color: #ffc107; color: #333;">Actualizar Producto</button>
+                <a href="index.php" class="btn btn-secondary" style="text-align:center; display:block; margin-top:0.5rem;">Cancelar</a>
             </form>
         </div>
     </div>

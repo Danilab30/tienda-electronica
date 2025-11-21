@@ -1,22 +1,15 @@
 <?php
+require_once 'verificar_admin.php'; // ¡GUARDIA DE SEGURIDAD!
 
-require_once 'verificar_admin.php'; // ¡GUARDIA AQUÍ!
+// (El guardia ya inicia la sesión)
 
-// (session_start() ya no es necesario)
-
-// 2. Incluir la conexión
-require '../config/conexion.php';
-
-// 1. Iniciar sesión
-session_start();
-
-// 2. Incluir la conexión
+// Incluir la conexión
 require '../config/conexion.php';
 
 // 3. Verificar que los datos lleguen por POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 4. Recoger TODOS los datos del formulario, INCLUYENDO LOS OCULTOS
+    // 4. Recoger TODOS los datos del formulario
     $id = $_POST['id'];
     $nombre = $_POST['nombre'];
     $descripcion = $_POST['descripcion'];
@@ -28,6 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $serie = $_POST['serie'];
     $consumo = $_POST['consumo'];
     
+    // --- ¡NUEVO! Capturamos el checkbox de oferta ---
+    // Si está marcado vale 1, si no vale 0
+    $en_oferta = isset($_POST['en_oferta']) ? 1 : 0;
+
     // El nombre de la imagen que ya estaba en la BD
     $nombre_imagen_db = $_POST['imagen_anterior'];
 
@@ -36,9 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0 && $_FILES['imagen']['size'] > 0) {
         
         $directorio_subida = '../uploads/';
-        
-        // Crear un nombre único para la NUEVA imagen
-        $extension = pathinfo(basename($_FILES['imagen']['name']), PATHINFO_EXTENSION);
+        $nombre_archivo_original = basename($_FILES['imagen']['name']);
+        $extension = pathinfo($nombre_archivo_original, PATHINFO_EXTENSION);
         $nombre_imagen_unico = uniqid() . '_' . time() . '.' . $extension;
         $ruta_objetivo = $directorio_subida . $nombre_imagen_unico;
 
@@ -54,17 +50,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nombre_imagen_db = $nombre_imagen_unico;
 
         } else {
-            // Si falla la subida de la nueva imagen, avisamos y detenemos
             $_SESSION['mensaje'] = "Error: Hubo un problema al subir la nueva imagen.";
             $_SESSION['tipo_mensaje'] = 'error';
             header('Location: editar_producto.php?id=' . $id);
             exit;
         }
     }
-    // Si no se subió una nueva imagen, $nombre_imagen_db simplemente conserva su valor original
 
     // --- 6. Actualizar la Base de Datos (UPDATE) ---
     try {
+        // Añadimos 'en_oferta' a la lista de campos a actualizar
         $sql = "UPDATE productos SET 
                     nombre = ?, 
                     descripcion = ?, 
@@ -75,12 +70,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     tipo = ?, 
                     serie = ?, 
                     consumo = ?, 
-                    imagen_url = ? 
-                WHERE id = ?"; // La clave es el 'WHERE'
+                    imagen_url = ?,
+                    en_oferta = ? 
+                WHERE id = ?"; 
         
         $stmt = $pdo->prepare($sql);
         
-        // Ejecutar la consulta con todos los valores en orden
+        // Ejecutar la consulta con todos los valores en orden (incluyendo $en_oferta)
         $stmt->execute([
             $nombre,
             $descripcion,
@@ -91,18 +87,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $tipo,
             $serie,
             $consumo,
-            $nombre_imagen_db, // El nombre de la imagen (nueva o la anterior)
-            $id                 // El ID para el 'WHERE'
+            $nombre_imagen_db,
+            $en_oferta, // <--- NUEVO DATO
+            $id
         ]);
 
-        // 7. Redirigir de vuelta al panel con mensaje de éxito
         $_SESSION['mensaje'] = "Producto actualizado exitosamente.";
         $_SESSION['tipo_mensaje'] = 'exito';
         header('Location: index.php');
         exit;
 
     } catch (PDOException $e) {
-        // 8. Manejar errores de la base de datos
         $_SESSION['mensaje'] = "Error al actualizar el producto: " . $e->getMessage();
         $_SESSION['tipo_mensaje'] = 'error';
         header('Location: editar_producto.php?id=' . $id);
@@ -110,7 +105,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 } else {
-    // Si no es POST, redirigir al panel
     header('Location: index.php');
     exit;
 }
